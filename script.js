@@ -12,6 +12,7 @@ const boardUI = (function() {
     mainDiv = document.querySelector(".main");
     restartButton = document.querySelector(".restart-button");
     messageBar = document.querySelector(".bottom-bar");
+    let checkTie = false;
     function reloadUI(gameboard)
     {
         mainDiv.innerHTML = "";
@@ -21,7 +22,6 @@ const boardUI = (function() {
                 newDiv.classList.add("grid");
                 newDiv.id = i;
                 mainDiv.appendChild(newDiv);
-                console.log(newDiv);
                 if (gameboard[i].length === 0) {
                     newDiv.innerHTML = "";
                 } else {
@@ -32,7 +32,8 @@ const boardUI = (function() {
     return {
         reloadUI: reloadUI,
         messageBar,
-        restartButton
+        restartButton,
+        checkTie
     }
 })();
 
@@ -47,12 +48,15 @@ function clickEvents() {
                         gameboard[e.target.id] = "X";
                         player1 = true;
                         checkWinner();
+                        
                     } else if (player1 === true && winner === false) {
                         e.target.innerHTML = "O";
                         gameboard[e.target.id] = "O"
                         player1 = false;
                         checkWinner();
                     }
+                checkTie(gameboard);   
+                console.log("?") ;
             } 
             
             if (winner === true) {
@@ -102,6 +106,18 @@ function checkWinner() {
 
 function endGame(player) {
     messageBar.innerHTML = `${player} WINS!`;
+}
+
+function checkTie(array) {
+    counter = 9;
+    for (let i = 0; i < 9; i++) {
+        if (array[i] === "X" || array[i] === "O") {
+            counter --; 
+        }
+    }
+    if (counter === 0) {
+        messageBar.innerHTML = "It's A Tie!"
+    }
 }
 
 gameLogic();
